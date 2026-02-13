@@ -15,6 +15,7 @@ function BluetoothReceiver() {
   const serverRef = useRef(null);
   const disconnectHandlerRef = useRef(null);
   const characteristicHandlerRef = useRef(null);
+  const characteristicRef = useRef(null);
 
   useEffect(() => {
     // Check if Web Bluetooth is available
@@ -27,6 +28,9 @@ function BluetoothReceiver() {
 
     // Cleanup on unmount
     return () => {
+      if (characteristicRef.current && characteristicHandlerRef.current) {
+        characteristicRef.current.removeEventListener('characteristicvaluechanged', characteristicHandlerRef.current);
+      }
       if (deviceRef.current && disconnectHandlerRef.current) {
         deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
       }
@@ -69,6 +73,7 @@ function BluetoothReceiver() {
       // Get the service and characteristic
       const service = await server.getPrimaryService(SERVICE_UUID);
       const characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID);
+      characteristicRef.current = characteristic;
 
       // Start notifications
       await characteristic.startNotifications();
@@ -96,6 +101,9 @@ function BluetoothReceiver() {
   };
 
   const stopReceiving = async () => {
+    if (characteristicRef.current && characteristicHandlerRef.current) {
+      characteristicRef.current.removeEventListener('characteristicvaluechanged', characteristicHandlerRef.current);
+    }
     if (deviceRef.current && disconnectHandlerRef.current) {
       deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
     }
@@ -108,6 +116,7 @@ function BluetoothReceiver() {
     serverRef.current = null;
     disconnectHandlerRef.current = null;
     characteristicHandlerRef.current = null;
+    characteristicRef.current = null;
   };
 
   const copyToClipboard = async () => {
