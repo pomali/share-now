@@ -46,10 +46,9 @@ function BluetoothReceiver() {
       setStatus('Waiting for sender to connect...');
       setReceivedText('');
 
-      // Request a Bluetooth device
+      // Request a Bluetooth device - only show devices with our service
       const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: [SERVICE_UUID]
+        filters: [{ services: [SERVICE_UUID] }]
       });
 
       deviceRef.current = device;
@@ -91,9 +90,13 @@ function BluetoothReceiver() {
 
     } catch (err) {
       if (err.name === 'NotFoundError') {
-        setError('No device selected. Please try again.');
+        setError('No compatible device found. Make sure you have a Bluetooth device advertising the Share Now service, or connect to the same device as the sender.');
+      } else if (err.name === 'NetworkError') {
+        setError('Connection failed. The selected device may not support the required Bluetooth service or is out of range.');
+      } else if (err.name === 'SecurityError') {
+        setError('Bluetooth access denied. Please ensure you are using HTTPS and have granted Bluetooth permissions.');
       } else {
-        setError(`Connection failed: ${err.message}`);
+        setError(`Connection failed: ${err.message}. Ensure the device supports the Share Now Bluetooth service.`);
       }
       setStatus('');
       setIsAdvertising(false);
@@ -191,11 +194,19 @@ function BluetoothReceiver() {
       <div className="info-section">
         <h3>How it works</h3>
         <ol>
-          <li>Click "Start Receiving" to begin listening for Bluetooth connections</li>
-          <li>Select your device when the sender searches for devices (confirm the name matches)</li>
-          <li>The text will be received automatically when the sender transmits</li>
-          <li>Copy the received text to clipboard or receive again</li>
+          <li>Both sender and receiver connect to the same Bluetooth peripheral device</li>
+          <li>Click "Start Receiving" to search for compatible Bluetooth devices</li>
+          <li>Select the same device that the sender will connect to (only devices with the required service will appear)</li>
+          <li>Wait for the sender to transmit data</li>
+          <li>The text will be received automatically and displayed</li>
         </ol>
+        <div className="info-note">
+          <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
+          Both sender and receiver must connect to the same Bluetooth peripheral device (like a phone running 
+          a companion app) that advertises the Share Now service UUID: {SERVICE_UUID.substring(0, 18)}...
+          <br /><br />
+          For direct browser-to-browser sharing, use the QR Code mode instead.
+        </div>
       </div>
     </div>
   );

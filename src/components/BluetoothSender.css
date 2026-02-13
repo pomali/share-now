@@ -140,3 +140,14 @@
 .info-section li {
   margin-bottom: 8px;
 }
+
+.info-note {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: rgba(100, 108, 255, 0.1);
+  border-left: 4px solid #646cff;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 14px;
+  line-height: 1.6;
+}

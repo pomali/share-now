@@ -39,10 +39,9 @@ function BluetoothSender() {
       setError('');
       setStatus('Searching for devices...');
 
-      // Request a Bluetooth device
+      // Request a Bluetooth device - only show devices with our service
       const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: [SERVICE_UUID]
+        filters: [{ services: [SERVICE_UUID] }]
       });
 
       deviceRef.current = device;
@@ -65,9 +64,13 @@ function BluetoothSender() {
       setStatus(`Connected to ${device.name || 'device'}. Enter text and click Send.`);
     } catch (err) {
       if (err.name === 'NotFoundError') {
-        setError('No device selected. Please try again.');
+        setError('No compatible device found. Make sure the receiver device has Bluetooth enabled and is advertising the required service.');
+      } else if (err.name === 'NetworkError') {
+        setError('Connection failed. The selected device may not support the required Bluetooth service or is out of range.');
+      } else if (err.name === 'SecurityError') {
+        setError('Bluetooth access denied. Please ensure you are using HTTPS and have granted Bluetooth permissions.');
       } else {
-        setError(`Connection failed: ${err.message}`);
+        setError(`Connection failed: ${err.message}. Ensure the device supports the Share Now Bluetooth service.`);
       }
       setStatus('');
       setIsConnected(false);
@@ -176,11 +179,17 @@ function BluetoothSender() {
       <div className="info-section">
         <h3>How it works</h3>
         <ol>
-          <li>Click "Connect to Device" to search for nearby Bluetooth devices</li>
-          <li>Select the receiver device from the list (confirm device name matches)</li>
+          <li>Both devices must connect to a Bluetooth device that supports the Share Now service</li>
+          <li>Click "Connect to Device" to search for compatible Bluetooth devices</li>
+          <li>Select a device from the filtered list (only devices with the required service will appear)</li>
           <li>Enter your text and click "Send via Bluetooth"</li>
-          <li>The text will be transferred directly to the connected device</li>
+          <li>The text will be transferred to the connected Bluetooth device</li>
         </ol>
+        <div className="info-note">
+          <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
+          You need a compatible Bluetooth peripheral device (like a phone running a companion app) that 
+          advertises the Share Now Bluetooth service UUID: {SERVICE_UUID.substring(0, 18)}...
+        </div>
       </div>
     </div>
   );
