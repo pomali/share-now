@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Sender from './components/Sender';
 import Receiver from './components/Receiver';
+import BluetoothSender from './components/BluetoothSender';
+import BluetoothReceiver from './components/BluetoothReceiver';
 import './App.css';
 
 function Home() {
@@ -21,13 +23,25 @@ function Home() {
           <h2>Receiver</h2>
           <p>Scan a QR code to receive</p>
         </Link>
+
+        <Link to="/bluetooth-sender" className="mode-card">
+          <div className="icon">📡</div>
+          <h2>Bluetooth Sender</h2>
+          <p>Send via Bluetooth</p>
+        </Link>
+
+        <Link to="/bluetooth-receiver" className="mode-card">
+          <div className="icon">📲</div>
+          <h2>Bluetooth Receiver</h2>
+          <p>Receive via Bluetooth</p>
+        </Link>
       </div>
 
       <div className="info-section">
         <h3>How it works</h3>
         <ol>
-          <li>The sender enters text and generates a QR code</li>
-          <li>The receiver scans the QR code with their camera</li>
+          <li><strong>QR Code:</strong> The sender enters text and generates a QR code. The receiver scans it with their camera.</li>
+          <li><strong>Bluetooth:</strong> Connect two devices via Bluetooth, confirm the device name, and send text directly.</li>
           <li>Data is shared locally - no server involved!</li>
         </ol>
       </div>
@@ -41,8 +55,10 @@ function App() {
       <nav className="navbar">
         <Link to="/" className="nav-brand">Share Now</Link>
         <div className="nav-links">
-          <Link to="/sender" className="nav-link">Sender</Link>
-          <Link to="/receiver" className="nav-link">Receiver</Link>
+          <Link to="/sender" className="nav-link">QR Sender</Link>
+          <Link to="/receiver" className="nav-link">QR Receiver</Link>
+          <Link to="/bluetooth-sender" className="nav-link">BT Sender</Link>
+          <Link to="/bluetooth-receiver" className="nav-link">BT Receiver</Link>
         </div>
       </nav>
 
@@ -50,6 +66,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sender" element={<Sender />} />
         <Route path="/receiver" element={<Receiver />} />
+        <Route path="/bluetooth-sender" element={<BluetoothSender />} />
+        <Route path="/bluetooth-receiver" element={<BluetoothReceiver />} />
       </Routes>
     </Router>
   );
