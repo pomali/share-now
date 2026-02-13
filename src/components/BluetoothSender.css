@@ -1,0 +1,142 @@
+.bluetooth-sender-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.bluetooth-sender-container h1 {
+  color: #646cff;
+  margin-bottom: 10px;
+}
+
+.bluetooth-sender-container p {
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.bluetooth-actions {
+  margin: 30px 0;
+}
+
+.connect-button,
+.send-button,
+.disconnect-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.connect-button {
+  background-color: #646cff;
+  color: white;
+  width: 100%;
+}
+
+.connect-button:hover:not(:disabled) {
+  background-color: #535bf2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(100, 108, 255, 0.3);
+}
+
+.connect-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.send-button {
+  flex: 1;
+  background-color: #4caf50;
+  color: white;
+}
+
+.send-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.disconnect-button {
+  flex: 1;
+  background-color: #f44336;
+  color: white;
+}
+
+.disconnect-button:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+.input-section {
+  margin-bottom: 15px;
+}
+
+.input-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #646cff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  box-sizing: border-box;
+}
+
+.input-section textarea:focus {
+  outline: none;
+  border-color: #535bf2;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+}
+
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 2px solid #f44336;
+  color: #f44336;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.status-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 2px solid #4caf50;
+  color: #4caf50;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.info-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.info-section h3 {
+  color: #646cff;
+  margin-bottom: 10px;
+}
+
+.info-section ol {
+  color: rgba(255, 255, 255, 0.87);
+  padding-left: 20px;
+}
+
+.info-section li {
+  margin-bottom: 8px;
+}
