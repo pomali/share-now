@@ -3,22 +3,21 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* Modern Color Palette */
-  --color-primary: #6366f1;
-  --color-primary-dark: #4f46e5;
-  --color-primary-light: #818cf8;
-  --color-secondary: #06b6d4;
-  --color-secondary-dark: #0891b2;
-  --color-accent: #8b5cf6;
+  /* Custom Color Palette */
+  --color-primary: #035397;
+  --color-primary-dark: #001E6C;
+  --color-primary-light: #0571bb;
+  --color-secondary: #E8630A;
+  --color-accent: #FCD900;
   --color-success: #10b981;
   --color-error: #ef4444;
-  --color-warning: #f59e0b;
+  --color-warning: #FCD900;
   
   /* Background Colors */
-  --color-bg-primary: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
-  --color-bg-elevated: #1e293b;
+  --color-bg-primary: #0a1929;
+  --color-bg-secondary: #132f4c;
+  --color-bg-tertiary: #1a4065;
+  --color-bg-elevated: #132f4c;
   
   /* Text Colors */
   --color-text-primary: #f1f5f9;
@@ -26,14 +25,14 @@
   --color-text-muted: #94a3b8;
   
   /* Border Colors */
-  --border-color: #334155;
+  --border-color: #1a4065;
   --border-color-focus: var(--color-primary);
   
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
-  --shadow-glow: 0 0 20px rgb(99 102 241 / 0.3);
+  --shadow-glow: 0 0 20px rgb(3 83 151 / 0.3);
 
   color-scheme: light dark;
   color: var(--color-text-primary);
@@ -62,8 +61,8 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2em;
+  line-height: 1.2;
 }
 
 button {

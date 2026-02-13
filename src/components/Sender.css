@@ -1,28 +1,38 @@
 .sender-container {
-  max-width: 700px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 .sender-container h1 {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.75rem;
-  font-weight: 800;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 1.75rem;
   letter-spacing: -0.02em;
 }
 
 .sender-container p {
   color: var(--color-text-muted);
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.sender-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 769px) {
+  .sender-content {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .input-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .input-section textarea {
@@ -54,7 +64,7 @@
 
 .qr-section {
   text-align: center;
-  margin-top: 3rem;
+  margin-top: 0;
   animation: fadeIn 0.5s ease;
 }
 
@@ -70,19 +80,16 @@
 }
 
 .qr-section h2 {
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.25rem;
 }
 
 .qr-code-wrapper {
   background: white;
-  padding: 2rem;
-  border-radius: 16px;
+  padding: 1.5rem;
+  border-radius: 12px;
   display: inline-block;
   box-shadow: var(--shadow-lg);
   border: 3px solid var(--color-primary);
@@ -91,7 +98,7 @@
 
 .qr-code-wrapper:hover {
   transform: scale(1.02);
-  box-shadow: 0 20px 30px -5px rgb(0 0 0 / 0.5), 0 0 30px rgb(99 102 241 / 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .share-info {
@@ -106,7 +113,7 @@
 
 @media (max-width: 768px) {
   .sender-container {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
   }
   
   .input-section textarea {
@@ -115,11 +122,11 @@
   }
   
   .qr-section {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
   
   .qr-code-wrapper {
-    padding: 1.5rem;
+    padding: 1.25rem;
     max-width: 100%;
   }
   

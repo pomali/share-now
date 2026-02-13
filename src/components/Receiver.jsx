@@ -7,13 +7,16 @@ function Receiver() {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
+  const resultRef = useRef(null);
 
   const startScanning = async () => {
     try {
       setError('');
       setScannedText('');
+      setShowScrollButton(false);
       
       // Make the reader element visible before the library initializes,
       // so it can measure dimensions for the camera feed.
@@ -40,6 +43,10 @@ function Receiver() {
         (decodedText) => {
           setScannedText(decodedText);
           stopScanning();
+          // Show scroll button on mobile after scanning
+          if (window.innerWidth <= 768) {
+            setShowScrollButton(true);
+          }
         },
         () => {
           // Ignore scan errors (no QR code in frame)
@@ -77,6 +84,13 @@ function Receiver() {
     }
   };
 
+  const scrollToResult = () => {
+    if (resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setShowScrollButton(false);
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (html5QrCodeRef.current && isScanning) {
@@ -87,7 +101,7 @@ function Receiver() {
 
   return (
     <div className="receiver-container">
-      <h1>Share Now - Receiver</h1>
+      <h1>Receiver</h1>
       <p>Scan a QR code to receive the shared content</p>
 
       {error && (
@@ -96,23 +110,25 @@ function Receiver() {
         </div>
       )}
 
-      <div className="scanner-section">
-        {!isScanning && !scannedText && (
-          <button className="scan-button" onClick={startScanning}>
-            Start Camera
-          </button>
-        )}
+      <div className="receiver-content">
+        <div className="scanner-section">
+          {!isScanning && !scannedText && (
+            <button className="scan-button" onClick={startScanning}>
+              Start Camera
+            </button>
+          )}
 
-        <div id="qr-reader" ref={scannerRef} className={isScanning ? '' : 'qr-reader-hidden'}></div>
-        
-        {isScanning && (
-          <button className="stop-button" onClick={stopScanning}>
-            Stop Scanning
-          </button>
-        )}
+          <div id="qr-reader" ref={scannerRef} className={isScanning ? '' : 'qr-reader-hidden'}></div>
+          
+          {isScanning && (
+            <button className="stop-button" onClick={stopScanning}>
+              Stop Scanning
+            </button>
+          )}
+        </div>
 
         {scannedText && (
-          <div className="result-section">
+          <div className="result-section" ref={resultRef}>
             <h2>Scanned Content:</h2>
             <div className="scanned-text">
               {scannedText}
@@ -122,6 +138,7 @@ function Receiver() {
             </button>
             <button className="scan-again-button" onClick={() => {
               setScannedText('');
+              setShowScrollButton(false);
               startScanning();
             }}>
               Scan Again
@@ -129,6 +146,16 @@ function Receiver() {
           </div>
         )}
       </div>
+
+      {showScrollButton && (
+        <button 
+          className="scroll-to-result-button" 
+          onClick={scrollToResult}
+          aria-label="Scroll to result"
+        >
+          ↓
+        </button>
+      )}
     </div>
   );
 }

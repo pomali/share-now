@@ -1,28 +1,38 @@
 .receiver-container {
-  max-width: 700px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 .receiver-container h1 {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.75rem;
-  font-weight: 800;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 1.75rem;
   letter-spacing: -0.02em;
 }
 
 .receiver-container p {
   color: var(--color-text-muted);
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.receiver-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 769px) {
+  .receiver-content {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .error-message {
-  background: linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%);
+  background: var(--color-error);
   color: white;
   padding: 1rem;
   border-radius: 12px;
@@ -35,7 +45,7 @@
 
 .scanner-section {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 #qr-reader {
@@ -80,47 +90,48 @@
 
 .scan-button,
 .scan-again-button {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: var(--color-primary);
   color: white;
 }
 
 .scan-button:hover,
 .scan-again-button:hover {
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  background: var(--color-primary-light);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-md);
 }
 
 .stop-button {
-  background: linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%);
+  background: var(--color-error);
   color: white;
 }
 
 .stop-button:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  background: #dc2626;
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(239 68 68 / 0.5);
+  box-shadow: var(--shadow-md);
 }
 
 .copy-button {
-  background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+  background: var(--color-success);
   color: white;
 }
 
 .copy-button:hover {
-  background: linear-gradient(135deg, #34d399 0%, var(--color-success) 100%);
+  background: #059669;
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(16 185 129 / 0.5);
+  box-shadow: var(--shadow-md);
 }
 
 .result-section {
-  margin-top: 2rem;
-  padding: 2rem;
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
-  border-radius: 16px;
+  margin-top: 0;
+  padding: 1.5rem;
+  background: var(--color-bg-secondary);
+  border-radius: 12px;
   border: 2px solid var(--color-primary);
   box-shadow: var(--shadow-lg);
   animation: fadeIn 0.5s ease;
+  position: relative;
 }
 
 @keyframes fadeIn {
@@ -135,13 +146,10 @@
 }
 
 .result-section h2 {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1.25rem;
-  font-weight: 700;
-  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 1.25rem;
 }
 
 .scanned-text {
@@ -158,9 +166,36 @@
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.scroll-to-result-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  z-index: 50;
+  animation: fadeIn 0.3s ease;
+}
+
+.scroll-to-result-button:hover {
+  background: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
 @media (max-width: 768px) {
   .receiver-container {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
   }
   
   #qr-reader {
@@ -179,12 +214,18 @@
   }
   
   .result-section {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
   }
   
   .scanned-text {
     font-size: 0.875rem;
     padding: 1rem;
+  }
+  
+  .scroll-to-result-button {
+    bottom: 1.5rem;
+    right: 1.5rem;
   }
 }
 
