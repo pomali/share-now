@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import './BluetoothSender.css';
 
-// Custom UUID for our service
-const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
-const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
+// Custom UUID for our service - randomly generated to avoid conflicts
+const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 
 function BluetoothSender() {
   const [text, setText] = useState('');
@@ -12,6 +12,7 @@ function BluetoothSender() {
   const [error, setError] = useState('');
   const deviceRef = useRef(null);
   const serverRef = useRef(null);
+  const disconnectHandlerRef = useRef(null);
 
   useEffect(() => {
     // Check if Web Bluetooth is available
@@ -21,6 +22,16 @@ function BluetoothSender() {
       }
     };
     checkBluetooth();
+
+    // Cleanup on unmount
+    return () => {
+      if (deviceRef.current && disconnectHandlerRef.current) {
+        deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
+      }
+      if (deviceRef.current && deviceRef.current.gatt.connected) {
+        deviceRef.current.gatt.disconnect();
+      }
+    };
   }, []);
 
   const connectToDevice = async () => {
@@ -38,10 +49,12 @@ function BluetoothSender() {
       setStatus(`Found device: ${device.name || 'Unknown Device'}`);
 
       // Add disconnect listener
-      device.addEventListener('gattserverdisconnected', () => {
+      const disconnectHandler = () => {
         setIsConnected(false);
         setStatus('Device disconnected');
-      });
+      };
+      disconnectHandlerRef.current = disconnectHandler;
+      device.addEventListener('gattserverdisconnected', disconnectHandler);
 
       // Connect to GATT server
       setStatus('Connecting...');
@@ -98,6 +111,9 @@ function BluetoothSender() {
   };
 
   const disconnect = async () => {
+    if (deviceRef.current && disconnectHandlerRef.current) {
+      deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
+    }
     if (deviceRef.current && deviceRef.current.gatt.connected) {
       deviceRef.current.gatt.disconnect();
     }
@@ -105,6 +121,7 @@ function BluetoothSender() {
     setStatus('Disconnected');
     deviceRef.current = null;
     serverRef.current = null;
+    disconnectHandlerRef.current = null;
   };
 
   return (

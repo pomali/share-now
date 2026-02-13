@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import './BluetoothReceiver.css';
 
-// Custom UUID for our service (must match sender)
-const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
-const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
+// Custom UUID for our service - randomly generated to avoid conflicts (must match sender)
+const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const CHARACTERISTIC_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 
 function BluetoothReceiver() {
   const [receivedText, setReceivedText] = useState('');
@@ -13,6 +13,8 @@ function BluetoothReceiver() {
   const [copied, setCopied] = useState(false);
   const deviceRef = useRef(null);
   const serverRef = useRef(null);
+  const disconnectHandlerRef = useRef(null);
+  const characteristicHandlerRef = useRef(null);
 
   useEffect(() => {
     // Check if Web Bluetooth is available
@@ -22,6 +24,16 @@ function BluetoothReceiver() {
       }
     };
     checkBluetooth();
+
+    // Cleanup on unmount
+    return () => {
+      if (deviceRef.current && disconnectHandlerRef.current) {
+        deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
+      }
+      if (deviceRef.current && deviceRef.current.gatt.connected) {
+        deviceRef.current.gatt.disconnect();
+      }
+    };
   }, []);
 
   const startReceiving = async () => {
@@ -40,10 +52,12 @@ function BluetoothReceiver() {
       setStatus(`Connecting to: ${device.name || 'Unknown Device'}`);
 
       // Add disconnect listener
-      device.addEventListener('gattserverdisconnected', () => {
+      const disconnectHandler = () => {
         setIsAdvertising(false);
         setStatus('Device disconnected');
-      });
+      };
+      disconnectHandlerRef.current = disconnectHandler;
+      device.addEventListener('gattserverdisconnected', disconnectHandler);
 
       // Connect to GATT server
       const server = await device.gatt.connect();
@@ -60,13 +74,15 @@ function BluetoothReceiver() {
       await characteristic.startNotifications();
 
       // Listen for data
-      characteristic.addEventListener('characteristicvaluechanged', (event) => {
+      const characteristicHandler = (event) => {
         const value = event.target.value;
         const decoder = new TextDecoder();
         const text = decoder.decode(value);
         setReceivedText(text);
         setStatus('Data received successfully!');
-      });
+      };
+      characteristicHandlerRef.current = characteristicHandler;
+      characteristic.addEventListener('characteristicvaluechanged', characteristicHandler);
 
     } catch (err) {
       if (err.name === 'NotFoundError') {
@@ -80,6 +96,9 @@ function BluetoothReceiver() {
   };
 
   const stopReceiving = async () => {
+    if (deviceRef.current && disconnectHandlerRef.current) {
+      deviceRef.current.removeEventListener('gattserverdisconnected', disconnectHandlerRef.current);
+    }
     if (deviceRef.current && deviceRef.current.gatt.connected) {
       deviceRef.current.gatt.disconnect();
     }
@@ -87,6 +106,8 @@ function BluetoothReceiver() {
     setStatus('Stopped receiving');
     deviceRef.current = null;
     serverRef.current = null;
+    disconnectHandlerRef.current = null;
+    characteristicHandlerRef.current = null;
   };
 
   const copyToClipboard = async () => {
