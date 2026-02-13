@@ -251,8 +251,9 @@ const qrData = JSON.stringify(qrPayload);
 ### Answer Creation (Peer B)
 
 ```javascript
-// Step 1: Parse QR payload
-const offerPayload = JSON.parse(qrData);
+// Step 1: Parse QR payload (scanned from Peer A)
+const offerQrData = /* scanned QR code data string */;
+const offerPayload = JSON.parse(offerQrData);
 
 // Step 2: Create peer connection
 const peerConnection = new RTCPeerConnection({
@@ -316,15 +317,16 @@ const answerPayload = {
 };
 
 // Step 10: Generate QR code
-const qrData = JSON.stringify(answerPayload);
+const answerQrData = JSON.stringify(answerPayload);
 // Use QR code library to generate and display QR code
 ```
 
 ### Completing Connection (Peer A)
 
 ```javascript
-// Step 1: Parse answer QR payload
-const answerPayload = JSON.parse(qrData);
+// Step 1: Parse answer QR payload (scanned from Peer B)
+const answerQrData = /* scanned QR code data string */;
+const answerPayload = JSON.parse(answerQrData);
 
 // Step 2: Set remote description
 await peerConnection.setRemoteDescription({
