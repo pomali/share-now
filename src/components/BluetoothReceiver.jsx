@@ -203,7 +203,7 @@ function BluetoothReceiver() {
         <div className="info-note">
           <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
           Both sender and receiver must connect to the same Bluetooth peripheral device (like a phone running 
-          a companion app) that advertises the Share Now service UUID: <code style={{ fontSize: '12px', wordBreak: 'break-all' }}>{SERVICE_UUID}</code>
+          a companion app) that advertises the Share Now service UUID: <code>{SERVICE_UUID}</code>
           <br /><br />
           For direct browser-to-browser sharing, use the QR Code mode instead.
         </div>

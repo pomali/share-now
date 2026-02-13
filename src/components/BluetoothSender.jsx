@@ -188,7 +188,7 @@ function BluetoothSender() {
         <div className="info-note">
           <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
           You need a compatible Bluetooth peripheral device (like a phone running a companion app) that 
-          advertises the Share Now Bluetooth service UUID: <code style={{ fontSize: '12px', wordBreak: 'break-all' }}>{SERVICE_UUID}</code>
+          advertises the Share Now Bluetooth service UUID: <code>{SERVICE_UUID}</code>
         </div>
       </div>
     </div>
