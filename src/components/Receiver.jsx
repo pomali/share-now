@@ -91,13 +91,12 @@ function Receiver() {
           </button>
         )}
 
+        <div id="qr-reader" ref={scannerRef} style={{ display: isScanning ? 'block' : 'none' }}></div>
+        
         {isScanning && (
-          <>
-            <div id="qr-reader" ref={scannerRef}></div>
-            <button className="stop-button" onClick={stopScanning}>
-              Stop Scanning
-            </button>
-          </>
+          <button className="stop-button" onClick={stopScanning}>
+            Stop Scanning
+          </button>
         )}
 
         {scannedText && (
