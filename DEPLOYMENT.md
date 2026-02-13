@@ -45,9 +45,23 @@ After deployment, visit your site at https://pomali.github.io/share-now/ and:
 
 Note: The camera scanning feature requires HTTPS (or localhost). GitHub Pages provides HTTPS by default, so camera access will work once deployed.
 
+## URL Routing
+
+This application uses React Router for client-side routing. To support direct URL access (e.g., `https://pomali.github.io/share-now/receiver`), the repository includes:
+
+- **404.html**: Intercepts 404 errors and redirects to index.html with the path preserved
+- **Redirect handler in index.html**: Restores the original URL before React Router loads
+
+This allows users to:
+- Navigate directly to any route (sender, receiver, etc.)
+- Refresh the page without losing their position
+- Share direct links to specific pages
+
+The solution is based on [spa-github-pages](https://github.com/rafgraph/spa-github-pages).
+
 ## Troubleshooting
 
-### Site shows 404
+### Site shows 404 on the home page
 - Ensure GitHub Pages is enabled in repository settings
 - Verify the source is set to "GitHub Actions"
 - Check that the workflow completed successfully in the Actions tab
