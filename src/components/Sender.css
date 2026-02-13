@@ -28,6 +28,7 @@
   resize: vertical;
   background-color: #1a1a1a;
   color: rgba(255, 255, 255, 0.87);
+  box-sizing: border-box;
 }
 
 .input-section textarea:focus {

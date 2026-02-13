@@ -31,10 +31,21 @@
 #qr-reader {
   width: 100%;
   max-width: 500px;
+  min-height: 300px;
   margin: 0 auto 20px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#qr-reader.qr-reader-hidden {
+  display: none;
+}
+
+#qr-reader video {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 12px;
 }
 
 .scan-button,

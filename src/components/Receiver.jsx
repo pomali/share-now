@@ -15,6 +15,12 @@ function Receiver() {
       setError('');
       setScannedText('');
       
+      // Make the reader element visible before the library initializes,
+      // so it can measure dimensions for the camera feed.
+      if (scannerRef.current) {
+        scannerRef.current.classList.remove('qr-reader-hidden');
+      }
+
       if (!html5QrCodeRef.current) {
         html5QrCodeRef.current = new Html5Qrcode("qr-reader");
       }
@@ -41,6 +47,9 @@ function Receiver() {
     } catch (err) {
       setError(`Unable to start camera: ${err.message || err}`);
       setIsScanning(false);
+      if (scannerRef.current) {
+        scannerRef.current.classList.add('qr-reader-hidden');
+      }
     }
   };
 
@@ -91,7 +100,7 @@ function Receiver() {
           </button>
         )}
 
-        <div id="qr-reader" ref={scannerRef} style={{ display: isScanning ? 'block' : 'none' }}></div>
+        <div id="qr-reader" ref={scannerRef} className={isScanning ? '' : 'qr-reader-hidden'}></div>
         
         {isScanning && (
           <button className="stop-button" onClick={stopScanning}>
