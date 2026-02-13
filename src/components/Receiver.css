@@ -1,0 +1,113 @@
+.receiver-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.receiver-container h1 {
+  color: #646cff;
+  margin-bottom: 10px;
+}
+
+.receiver-container p {
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background-color: #ff4444;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.scanner-section {
+  text-align: center;
+  margin-top: 30px;
+}
+
+#qr-reader {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.scan-button,
+.stop-button,
+.scan-again-button,
+.copy-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 5px;
+}
+
+.scan-button {
+  background-color: #646cff;
+  color: white;
+}
+
+.scan-button:hover {
+  background-color: #535bf2;
+}
+
+.stop-button {
+  background-color: #ff4444;
+  color: white;
+}
+
+.stop-button:hover {
+  background-color: #cc0000;
+}
+
+.result-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  border: 2px solid #646cff;
+}
+
+.result-section h2 {
+  color: #646cff;
+  margin-bottom: 15px;
+}
+
+.scanned-text {
+  background-color: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  word-break: break-all;
+  color: rgba(255, 255, 255, 0.87);
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.copy-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.copy-button:hover {
+  background-color: #45a049;
+}
+
+.scan-again-button {
+  background-color: #646cff;
+  color: white;
+}
+
+.scan-again-button:hover {
+  background-color: #535bf2;
+}
