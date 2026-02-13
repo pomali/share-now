@@ -57,8 +57,8 @@
 
 .input-section textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(232, 99, 10, 0.1);
   background-color: var(--color-bg-elevated);
 }
 
@@ -79,26 +79,20 @@
   }
 }
 
-.qr-section h2 {
-  margin-bottom: 1.25rem;
-  color: var(--color-primary);
-  font-weight: 600;
-  font-size: 1.25rem;
-}
-
 .qr-code-wrapper {
   background: white;
   padding: 1.5rem;
   border-radius: 12px;
   display: inline-block;
   box-shadow: var(--shadow-lg);
-  border: 3px solid var(--color-primary);
+  border: 3px solid var(--color-secondary);
   transition: transform 0.3s ease;
 }
 
 .qr-code-wrapper:hover {
   transform: scale(1.02);
   box-shadow: var(--shadow-lg);
+  border-color: var(--color-accent);
 }
 
 .share-info {
@@ -108,7 +102,7 @@
   padding: 1rem;
   background: var(--color-bg-secondary);
   border-radius: 8px;
-  border-left: 4px solid var(--color-primary);
+  border-left: 4px solid var(--color-secondary);
 }
 
 @media (max-width: 768px) {

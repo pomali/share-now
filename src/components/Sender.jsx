@@ -22,7 +22,6 @@ function Sender() {
 
         {text && (
           <div className="qr-section">
-            <h2>Scan this QR Code</h2>
             <div className="qr-code-wrapper">
               <QRCodeSVG 
                 value={text} 
