@@ -21,6 +21,9 @@ function Receiver() {
         scannerRef.current.classList.remove('qr-reader-hidden');
       }
 
+      // Wait for next frame to ensure the browser applies the layout change
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
       if (!html5QrCodeRef.current) {
         html5QrCodeRef.current = new Html5Qrcode("qr-reader");
       }

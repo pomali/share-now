@@ -42,6 +42,7 @@
   display: none;
 }
 
+/* Override html5-qrcode library inline styles on the video element */
 #qr-reader video {
   width: 100% !important;
   height: auto !important;
