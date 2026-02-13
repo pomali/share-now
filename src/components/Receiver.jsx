@@ -8,11 +8,18 @@ function Receiver() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [autoStartAttempted, setAutoStartAttempted] = useState(false);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
   const resultRef = useRef(null);
+  const isScanningRef = useRef(false);
+  const isTransitioningRef = useRef(false);
 
   const startScanning = async () => {
+    // Prevent concurrent start attempts (e.g. React Strict Mode double-mount)
+    if (isScanningRef.current || isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+
     try {
       setError('');
       setScannedText('');
@@ -27,9 +34,8 @@ function Receiver() {
       // Wait for next frame to ensure the browser applies the layout change
       await new Promise(resolve => requestAnimationFrame(resolve));
 
-      if (!html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode("qr-reader");
-      }
+      // Always create a fresh instance to avoid stale state after cleanup
+      html5QrCodeRef.current = new Html5Qrcode("qr-reader");
 
       const config = { 
         fps: 10,
@@ -53,23 +59,29 @@ function Receiver() {
         }
       );
 
+      isScanningRef.current = true;
       setIsScanning(true);
     } catch (err) {
       setError(`Unable to start camera: ${err.message || err}`);
+      isScanningRef.current = false;
       setIsScanning(false);
       if (scannerRef.current) {
         scannerRef.current.classList.add('qr-reader-hidden');
       }
+    } finally {
+      isTransitioningRef.current = false;
     }
   };
 
   const stopScanning = async () => {
-    if (html5QrCodeRef.current && isScanning) {
+    if (html5QrCodeRef.current && isScanningRef.current) {
       try {
+        isScanningRef.current = false;
         await html5QrCodeRef.current.stop();
-        setIsScanning(false);
       } catch (err) {
         console.error('Error stopping scanner:', err);
+      } finally {
+        setIsScanning(false);
       }
     }
   };
@@ -91,13 +103,23 @@ function Receiver() {
     }
   };
 
+  // Auto-start camera on mount so users who already granted permissions
+  // don't have to press "Start Camera" again.
   useEffect(() => {
+    let cancelled = false;
+
+    startScanning().finally(() => {
+      if (!cancelled) setAutoStartAttempted(true);
+    });
+
     return () => {
-      if (html5QrCodeRef.current && isScanning) {
+      cancelled = true;
+      if (html5QrCodeRef.current && isScanningRef.current) {
+        isScanningRef.current = false;
         html5QrCodeRef.current.stop().catch(console.error);
       }
     };
-  }, [isScanning]);
+  }, []);
 
   return (
     <div className="receiver-container">
@@ -112,7 +134,7 @@ function Receiver() {
 
       <div className="receiver-content">
         <div className="scanner-section">
-          {!isScanning && !scannedText && (
+          {!isScanning && !scannedText && autoStartAttempted && (
             <button className="scan-button" onClick={startScanning}>
               Start Camera
             </button>
