@@ -100,6 +100,10 @@ The application is configured for automatic deployment to GitHub Pages via GitHu
 - **Web Audio API** - Ultrasonic sound generation and detection
 - **GitHub Pages** - Hosting
 
+## Android App
+
+A specification for a native Android application with similar functionality is available in [ANDROID_SPEC.md](ANDROID_SPEC.md). This document outlines requirements for implementing QR code, Bluetooth, and ultrasonic sound features on Android devices.
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
