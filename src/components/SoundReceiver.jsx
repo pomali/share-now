@@ -85,7 +85,7 @@ function SoundReceiver() {
       // Convert binary to base64 string
       let base64 = '';
       for (let i = 0; i < binary.length; i += 8) {
-        const byte = binary.substr(i, 8);
+        const byte = binary.slice(i, i + 8);
         if (byte.length === 8) {
           base64 += String.fromCharCode(parseInt(byte, 2));
         }
@@ -109,7 +109,7 @@ function SoundReceiver() {
     }
 
     // Extract length header
-    const lengthBinary = bits.substr(0, 16);
+    const lengthBinary = bits.slice(0, 16);
     const expectedLength = parseInt(lengthBinary, 2);
     
     if (expectedLength <= 0 || expectedLength > 50000) {
@@ -118,7 +118,7 @@ function SoundReceiver() {
     }
 
     // Extract actual data
-    const dataBits = bits.substr(16, expectedLength);
+    const dataBits = bits.slice(16, 16 + expectedLength);
     
     if (dataBits.length < expectedLength) {
       setError(`Incomplete data received: ${dataBits.length}/${expectedLength} bits. Please try again.`);
