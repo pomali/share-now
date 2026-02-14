@@ -26,7 +26,16 @@ function SoundReceiver() {
 
   useEffect(() => {
     return () => {
-      stopReceiving();
+      // Cleanup directly without calling stopReceiving
+      if (detectionIntervalRef.current) {
+        clearInterval(detectionIntervalRef.current);
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
     };
   }, []);
 
