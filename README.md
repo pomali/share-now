@@ -4,11 +4,13 @@ Share passwords, URLs, or any short text locally with no server using QR codes.
 
 ## Features
 
-- **🔒 Secure & Private**: No data leaves your device - everything is shared locally via QR codes or Bluetooth
+- **🔒 Secure & Private**: No data leaves your device - everything is shared locally via QR codes, Bluetooth, or sound
 - **📤 Sender Mode**: Enter text and generate a QR code instantly
 - **📥 Receiver Mode**: Scan QR codes using your device camera
 - **📡 Bluetooth Sender**: Send text directly to another device via Bluetooth
 - **📲 Bluetooth Receiver**: Receive text from another device via Bluetooth
+- **🔊 Sound Sender**: Transmit data using ultrasonic sound waves
+- **🎤 Sound Receiver**: Receive data through ultrasonic sound detection
 - **🎨 Modern UI**: Clean, responsive design with dark theme
 - **📱 Mobile-Friendly**: Works on desktop and mobile devices
 
@@ -26,7 +28,14 @@ Share passwords, URLs, or any short text locally with no server using QR codes.
 3. **Sender** enters text and clicks "Send via Bluetooth"
 4. **Receiver** receives the text automatically on their device
 
-**No internet or server required!** Data is shared locally via QR codes or Bluetooth connection.
+### Sound Mode
+1. **Receiver** clicks "Start Receiving" and grants microphone permission
+2. **Sender** enters text (max 500 characters) and clicks "Send via Sound"
+3. Keep devices close together (within 1-2 meters) during transmission
+4. Data is encoded into ultrasonic sound waves (18-20 kHz) and transmitted
+5. **Receiver** automatically detects, captures, and decodes the sound
+
+**No internet or server required!** Data is shared locally via QR codes, Bluetooth connection, or ultrasonic sound.
 
 ## Usage
 
@@ -36,8 +45,10 @@ Visit the deployed site at: https://pomali.github.io/share-now/
 - Click **Receiver** to scan a QR code
 - Click **Bluetooth Sender** to send text via Bluetooth
 - Click **Bluetooth Receiver** to receive text via Bluetooth
+- Click **Sound Sender** to transmit text via ultrasonic sound
+- Click **Sound Receiver** to receive text via ultrasonic sound
 
-**Note:** Bluetooth features require a compatible browser (Chrome, Edge, or Opera on desktop or Android) with Web Bluetooth API support.
+**Note:** Bluetooth features require a compatible browser (Chrome, Edge, or Opera on desktop or Android) with Web Bluetooth API support. Sound features work on any modern browser with microphone and speaker access.
 
 ## Development
 
@@ -86,6 +97,7 @@ The application is configured for automatic deployment to GitHub Pages via GitHu
 - **qrcode.react** - QR code generation
 - **html5-qrcode** - QR code scanning with camera
 - **Web Bluetooth API** - Direct device-to-device communication
+- **Web Audio API** - Ultrasonic sound generation and detection
 - **GitHub Pages** - Hosting
 
 ## License
