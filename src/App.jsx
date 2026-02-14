@@ -3,6 +3,8 @@ import Sender from './components/Sender';
 import Receiver from './components/Receiver';
 import BluetoothSender from './components/BluetoothSender';
 import BluetoothReceiver from './components/BluetoothReceiver';
+import SoundSender from './components/SoundSender';
+import SoundReceiver from './components/SoundReceiver';
 import './App.css';
 
 function Home() {
@@ -35,6 +37,18 @@ function Home() {
           <h2>Bluetooth Receiver</h2>
           <p>Receive via Bluetooth</p>
         </Link>
+
+        <Link to="/sound-sender" className="mode-card">
+          <div className="icon">🔊</div>
+          <h2>Sound Sender</h2>
+          <p>Send via ultrasonic sound</p>
+        </Link>
+
+        <Link to="/sound-receiver" className="mode-card">
+          <div className="icon">🎤</div>
+          <h2>Sound Receiver</h2>
+          <p>Receive via ultrasonic sound</p>
+        </Link>
       </div>
 
       <div className="info-section">
@@ -42,6 +56,7 @@ function Home() {
         <ol>
           <li><strong>QR Code:</strong> The sender enters text and generates a QR code. The receiver scans it with their camera.</li>
           <li><strong>Bluetooth:</strong> Connect two devices via Bluetooth, confirm the device name, and send text directly.</li>
+          <li><strong>Sound:</strong> Send data using ultrasonic sound waves (18-20 kHz). Keep devices close together for transmission.</li>
           <li>Data is shared locally - no server involved!</li>
         </ol>
       </div>
@@ -59,6 +74,8 @@ function App() {
           <Link to="/receiver" className="nav-link">QR Receiver</Link>
           <Link to="/bluetooth-sender" className="nav-link">BT Sender</Link>
           <Link to="/bluetooth-receiver" className="nav-link">BT Receiver</Link>
+          <Link to="/sound-sender" className="nav-link">Sound Sender</Link>
+          <Link to="/sound-receiver" className="nav-link">Sound Receiver</Link>
         </div>
       </nav>
 
@@ -68,6 +85,8 @@ function App() {
         <Route path="/receiver" element={<Receiver />} />
         <Route path="/bluetooth-sender" element={<BluetoothSender />} />
         <Route path="/bluetooth-receiver" element={<BluetoothReceiver />} />
+        <Route path="/sound-sender" element={<SoundSender />} />
+        <Route path="/sound-receiver" element={<SoundReceiver />} />
       </Routes>
     </Router>
   );
