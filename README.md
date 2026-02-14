@@ -100,6 +100,10 @@ The application is configured for automatic deployment to GitHub Pages via GitHu
 - **Web Audio API** - Ultrasonic sound generation and detection
 - **GitHub Pages** - Hosting
 
+## Documentation
+
+- **[Custom Camera Specification](CUSTOM_CAMERA_SPEC.md)** - Detailed specification for implementing a native Android camera component
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
