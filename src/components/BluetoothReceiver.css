@@ -57,7 +57,7 @@
 
 .waiting-section p {
   margin: 20px 0;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--color-text-primary);
   font-size: 18px;
 }
 
@@ -98,13 +98,13 @@
 }
 
 .received-text {
-  background-color: #1a1a1a;
-  border: 2px solid #646cff;
+  background-color: var(--color-bg-secondary);
+  border: 2px solid var(--color-primary);
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
   word-wrap: break-word;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--color-text-primary);
   font-size: 16px;
   min-height: 60px;
   text-align: left;
@@ -161,7 +161,7 @@
 .info-section {
   margin-top: 30px;
   padding: 20px;
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-secondary);
   border-radius: 12px;
   text-align: left;
 }
@@ -172,7 +172,7 @@
 }
 
 .info-section ol {
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--color-text-primary);
   padding-left: 20px;
 }
 

@@ -5,12 +5,12 @@
 }
 
 .sound-receiver-container h1 {
-  color: #fff;
+  color: var(--color-primary);
   margin-bottom: 0.5rem;
 }
 
 .sound-receiver-container > p {
-  color: #aaa;
+  color: var(--color-text-muted);
   margin-bottom: 2rem;
 }
 
@@ -57,23 +57,23 @@
 .listening-section {
   text-align: center;
   padding: 2rem;
-  background-color: #2a2a2a;
+  background-color: var(--color-bg-secondary);
   border-radius: 8px;
 }
 
 .listening-section p {
-  color: #fff;
+  color: var(--color-text-primary);
   margin-bottom: 0.5rem;
 }
 
 .listening-section .hint {
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
 
 .spinner {
-  border: 4px solid #444;
+  border: 4px solid var(--border-color);
   border-top: 4px solid #667eea;
   border-radius: 50%;
   width: 40px;
@@ -103,22 +103,22 @@
 }
 
 .result-section {
-  background-color: #2a2a2a;
+  background-color: var(--color-bg-secondary);
   padding: 2rem;
   border-radius: 8px;
 }
 
 .result-section h2 {
-  color: #fff;
+  color: var(--color-primary);
   margin-bottom: 1rem;
 }
 
 .received-text {
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
   padding: 1.5rem;
   border-radius: 8px;
-  border: 2px solid #4caf50;
+  border: 2px solid var(--color-success);
   word-wrap: break-word;
   margin-bottom: 1rem;
   min-height: 100px;
@@ -161,19 +161,19 @@
 }
 
 .info-section {
-  background-color: #2a2a2a;
+  background-color: var(--color-bg-secondary);
   padding: 1.5rem;
   border-radius: 8px;
   margin-top: 2rem;
 }
 
 .info-section h3 {
-  color: #fff;
+  color: var(--color-primary);
   margin-bottom: 1rem;
 }
 
 .info-section ol {
-  color: #ccc;
+  color: var(--color-text-secondary);
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -183,23 +183,23 @@
 }
 
 .info-note {
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-tertiary);
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #4caf50;
-  color: #ccc;
+  border-left: 4px solid var(--color-success);
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
 }
 
 .warning-note {
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-tertiary);
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #ff9800;
-  color: #ccc;
+  border-left: 4px solid var(--color-warning);
+  color: var(--color-text-secondary);
 }
 
 .info-note strong,
 .warning-note strong {
-  color: #fff;
+  color: var(--color-text-primary);
 }
