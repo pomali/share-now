@@ -1,0 +1,103 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+.receiver-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+.receiver-container h1 {
+  font-size: 1.5rem;
+  color: #6c63ff;
+  margin-bottom: 6px;
+}
+
+.receiver-container p {
+  font-size: 0.9rem;
+  color: #aaa;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background: #ff4757;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+
+.status-message {
+  background: #2ecc71;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+}
+
+.scanner-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 380px;
+}
+
+#qr-reader {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.qr-reader-hidden {
+  display: none !important;
+}
+
+.scan-button,
+.stop-button {
+  padding: 10px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.scan-button {
+  background: #6c63ff;
+  color: #fff;
+}
+
+.scan-button:hover {
+  background: #5a52e0;
+}
+
+.stop-button {
+  background: #ff4757;
+  color: #fff;
+}
+
+.stop-button:hover {
+  background: #e03545;
+}

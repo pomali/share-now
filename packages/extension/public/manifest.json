@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Share Now",
+  "version": "1.0.0",
+  "description": "Receive data from Share Now QR codes directly into any input field",
+  "permissions": ["contextMenus", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Share Now"
+  }
+}
