@@ -3,7 +3,12 @@
   "name": "Share Now",
   "version": "1.0.0",
   "description": "Receive data from Share Now QR codes directly into any input field",
-  "permissions": ["contextMenus", "tabs"],
+  "permissions": ["contextMenus", "tabs", "windows"],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -14,6 +19,11 @@
     }
   ],
   "action": {
-    "default_title": "Share Now"
+    "default_title": "Share Now",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   }
 }

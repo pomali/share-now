@@ -10,8 +10,11 @@ chrome.runtime.onInstalled.addListener(() => {
 // Open the QR receiver page in a popup window when the menu item is clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'get-from-share-now') {
+    // Include frameId so the fill message is routed to the correct frame
+    const frameId = info.frameId ?? 0;
     const receiverUrl =
-      chrome.runtime.getURL(`receiver/index.html`) + `?tabId=${tab.id}`;
+      chrome.runtime.getURL('receiver/index.html') +
+      `?tabId=${tab.id}&frameId=${frameId}`;
     chrome.windows.create({
       url: receiverUrl,
       type: 'popup',
@@ -21,13 +24,14 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-// Relay fill messages from the receiver page to the target tab
+// Relay fill messages from the receiver page to the target tab/frame
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === 'fill') {
-    chrome.tabs.sendMessage(message.tabId, {
-      action: 'fill',
-      text: message.text,
-    });
+    chrome.tabs.sendMessage(
+      message.tabId,
+      { action: 'fill', text: message.text },
+      { frameId: message.frameId ?? 0 }
+    );
     sendResponse({ success: true });
   }
 });

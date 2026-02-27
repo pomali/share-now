@@ -12,8 +12,10 @@ function Receiver() {
   const isScanningRef = useRef(false);
   const isTransitioningRef = useRef(false);
 
-  // Extract the originating tab ID from the URL query string
-  const tabId = parseInt(new URLSearchParams(window.location.search).get('tabId'), 10);
+  // Extract the originating tab ID and frame ID from the URL query string
+  const params = new URLSearchParams(window.location.search);
+  const tabId = parseInt(params.get('tabId'), 10);
+  const frameId = parseInt(params.get('frameId') ?? '0', 10);
 
   const startScanning = async () => {
     if (isScanningRef.current || isTransitioningRef.current) return;
@@ -79,8 +81,8 @@ function Receiver() {
   const handleScanned = (text) => {
     if (tabId) {
       // Send the scanned text to the background service worker which relays it
-      // to the content script in the originating tab.
-      chrome.runtime.sendMessage({ action: 'fill', text, tabId }, () => {
+      // to the content script in the originating tab/frame.
+      chrome.runtime.sendMessage({ action: 'fill', text, tabId, frameId }, () => {
         setStatus('✓ Filled successfully! This window will close shortly.');
         setTimeout(() => window.close(), 1500);
       });
