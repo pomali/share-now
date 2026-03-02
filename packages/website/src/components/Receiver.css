@@ -71,6 +71,11 @@
   border-radius: 16px;
 }
 
+/* Mirror the video feed when using the front-facing (user) camera */
+#qr-reader.camera-mirrored video {
+  transform: scaleX(-1);
+}
+
 .scan-button,
 .stop-button,
 .scan-again-button,
