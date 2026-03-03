@@ -7,6 +7,7 @@ function Receiver() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [autoStartAttempted, setAutoStartAttempted] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
   const isScanningRef = useRef(false);
@@ -24,6 +25,7 @@ function Receiver() {
     try {
       setError('');
       setStatus('');
+      setIsFrontCamera(false);
 
       if (scannerRef.current) {
         scannerRef.current.classList.remove('qr-reader-hidden');
@@ -39,17 +41,30 @@ function Receiver() {
         aspectRatio: 1.0,
       };
 
-      await html5QrCodeRef.current.start(
-        { facingMode: 'environment' },
-        config,
-        (decodedText) => {
-          stopScanning();
-          handleScanned(decodedText);
-        },
-        () => {
-          // Ignore per-frame scan errors (no QR in frame)
-        }
-      );
+      const successCallback = (decodedText) => {
+        stopScanning();
+        handleScanned(decodedText);
+      };
+      const errorCallback = () => {
+        // Ignore per-frame scan errors (no QR in frame)
+      };
+
+      try {
+        await html5QrCodeRef.current.start(
+          { facingMode: 'environment' },
+          config,
+          successCallback,
+          errorCallback
+        );
+      } catch {
+        await html5QrCodeRef.current.start(
+          { facingMode: 'user' },
+          config,
+          successCallback,
+          errorCallback
+        );
+        setIsFrontCamera(true);
+      }
 
       isScanningRef.current = true;
       setIsScanning(true);
@@ -126,7 +141,7 @@ function Receiver() {
         <div
           id="qr-reader"
           ref={scannerRef}
-          className={isScanning ? '' : 'qr-reader-hidden'}
+          className={[isScanning ? '' : 'qr-reader-hidden', isFrontCamera ? 'camera-mirrored' : ''].filter(Boolean).join(' ')}
         />
 
         {isScanning && (

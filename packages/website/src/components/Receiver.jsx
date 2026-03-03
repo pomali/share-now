@@ -9,6 +9,7 @@ function Receiver() {
   const [copied, setCopied] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [autoStartAttempted, setAutoStartAttempted] = useState(false);
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
   const resultRef = useRef(null);
@@ -24,6 +25,7 @@ function Receiver() {
       setError('');
       setScannedText('');
       setShowScrollButton(false);
+      setIsFrontCamera(false);
       
       // Make the reader element visible before the library initializes,
       // so it can measure dimensions for the camera feed.
@@ -43,21 +45,34 @@ function Receiver() {
         aspectRatio: 1.0
       };
 
-      await html5QrCodeRef.current.start(
-        { facingMode: "environment" },
-        config,
-        (decodedText) => {
-          setScannedText(decodedText);
-          stopScanning();
-          // Show scroll button on mobile after scanning
-          if (window.innerWidth <= 768) {
-            setShowScrollButton(true);
-          }
-        },
-        () => {
-          // Ignore scan errors (no QR code in frame)
+      const successCallback = (decodedText) => {
+        setScannedText(decodedText);
+        stopScanning();
+        // Show scroll button on mobile after scanning
+        if (window.innerWidth <= 768) {
+          setShowScrollButton(true);
         }
-      );
+      };
+      const errorCallback = () => {
+        // Ignore scan errors (no QR code in frame)
+      };
+
+      try {
+        await html5QrCodeRef.current.start(
+          { facingMode: "environment" },
+          config,
+          successCallback,
+          errorCallback
+        );
+      } catch {
+        await html5QrCodeRef.current.start(
+          { facingMode: "user" },
+          config,
+          successCallback,
+          errorCallback
+        );
+        setIsFrontCamera(true);
+      }
 
       isScanningRef.current = true;
       setIsScanning(true);
@@ -140,7 +155,7 @@ function Receiver() {
             </button>
           )}
 
-          <div id="qr-reader" ref={scannerRef} className={isScanning ? '' : 'qr-reader-hidden'}></div>
+          <div id="qr-reader" ref={scannerRef} className={[isScanning ? '' : 'qr-reader-hidden', isFrontCamera ? 'camera-mirrored' : ''].filter(Boolean).join(' ')}></div>
           
           {isScanning && (
             <button className="stop-button" onClick={stopScanning}>

@@ -70,6 +70,11 @@ body {
   overflow: hidden;
 }
 
+/* Mirror the video feed when using the front-facing (user) camera */
+#qr-reader.camera-mirrored video {
+  transform: scaleX(-1);
+}
+
 .qr-reader-hidden {
   display: none !important;
 }
