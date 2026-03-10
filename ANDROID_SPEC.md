@@ -522,7 +522,7 @@ All error messages should:
 
 ### 15.1 Web App Repository
 - Repository: https://github.com/pomali/share-now
-- Web App URL: https://pomali.github.io/share-now/
+- Web App URL: https://share-now.arcicode.com/
 
 ### 15.2 Android Documentation
 - Bluetooth Low Energy: https://developer.android.com/guide/topics/connectivity/bluetooth-le

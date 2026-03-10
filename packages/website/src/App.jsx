@@ -66,7 +66,7 @@ function Home() {
 
 function App() {
   return (
-    <Router basename="/share-now">
+    <Router basename="/">
       <nav className="navbar">
         <Link to="/" className="nav-brand">Share Now</Link>
         <div className="nav-links">
