@@ -39,7 +39,7 @@ Share passwords, URLs, or any short text locally with no server using QR codes.
 
 ## Usage
 
-Visit the deployed site at: https://pomali.github.io/share-now/
+Visit the deployed site at: https://share-now.arcicode.com/
 
 - Click **Sender** to share text via QR code
 - Click **Receiver** to scan a QR code
@@ -69,7 +69,7 @@ npm install
 npm run dev
 ```
 
-Visit http://localhost:5173/share-now/
+Visit http://localhost:5173/
 
 ### Building for Production
 
