@@ -51,6 +51,31 @@ function Home() {
         </Link>
       </div>
 
+      <div className="extension-section">
+        <h3>🧩 Browser Extension</h3>
+        <p className="extension-description">
+          Receive QR code data directly into any input field on any website — no need to copy and paste.
+        </p>
+        <a
+          href="/share-now-extension.zip"
+          download="share-now-extension.zip"
+          className="extension-download-btn"
+        >
+          ⬇️ Download Chrome Extension
+        </a>
+        <div className="extension-instructions">
+          <h4>Installation Instructions</h4>
+          <ol>
+            <li>Download the extension ZIP file above.</li>
+            <li>Unzip the downloaded file.</li>
+            <li>Open Chrome and navigate to <code aria-label="Chrome extensions settings URL">chrome://extensions</code>.</li>
+            <li>Enable <strong>Developer mode</strong> (toggle in the top-right corner).</li>
+            <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
+            <li>The Share Now extension is now installed! Right-click any input field to use it.</li>
+          </ol>
+        </div>
+      </div>
+
       <div className="info-section">
         <h3>How it works</h3>
         <ol>

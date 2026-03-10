@@ -33,6 +33,14 @@ jobs:
       
       - name: Build
         run: npm run build --workspace=packages/website
+
+      - name: Build extension
+        run: npm run build --workspace=packages/extension
+
+      - name: Package extension as zip
+        run: |
+          cd packages/extension/dist
+          zip -r ../../../packages/website/dist/share-now-extension.zip .
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
