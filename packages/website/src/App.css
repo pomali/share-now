@@ -139,6 +139,84 @@
   box-shadow: var(--shadow-sm);
 }
 
+.extension-section {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--color-bg-secondary);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.extension-section h3 {
+  color: var(--color-primary-light);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.extension-description {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.extension-download-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.extension-download-btn:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.extension-instructions {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.extension-instructions h4 {
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.extension-instructions ol {
+  list-style-position: inside;
+  color: var(--color-text-muted);
+  line-height: 2;
+  padding-left: 0;
+}
+
+.extension-instructions li {
+  margin-bottom: 0.25rem;
+  padding-left: 0.5rem;
+}
+
+.extension-instructions code {
+  font-size: 0.875rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 .info-section h3 {
   color: var(--color-primary-light);
   margin-bottom: 1.25rem;
