@@ -1,42 +1,50 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import './Sender.css';
+import {
+  Box,
+  Container,
+  VStack,
+  Heading,
+  Text,
+  Textarea,
+} from '@chakra-ui/react';
 
 function Sender() {
   const [text, setText] = useState('');
 
   return (
-    <div className="sender-container">
-      <h1>Sender</h1>
-      <p>Enter text to share via QR code</p>
-      
-      <div className="sender-content">
-        <div className="input-section">
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter password, URL, or any text to share..."
-            rows="8"
-          />
-        </div>
+    <Container maxW="2xl" py={10}>
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} textAlign="center">
+          <Heading>Sender</Heading>
+          <Text color="fg.muted">Enter text to share via QR code</Text>
+        </VStack>
+
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter password, URL, or any text to share..."
+          rows={8}
+          resize="vertical"
+        />
 
         {text && (
-          <div className="qr-section">
-            <div className="qr-code-wrapper">
-              <QRCodeSVG 
-                value={text} 
+          <VStack gap={3} align="center">
+            <Box bg="white" p={4} borderRadius="md" display="inline-block">
+              <QRCodeSVG
+                value={text}
                 size={256}
                 level="H"
                 includeMargin={true}
               />
-            </div>
-            <p className="share-info">
+            </Box>
+            <Text color="fg.muted" fontSize="sm">
               Have the receiver scan this QR code with their camera
-            </p>
-          </div>
+            </Text>
+          </VStack>
         )}
-      </div>
-    </div>
+      </VStack>
+    </Container>
   );
 }
 

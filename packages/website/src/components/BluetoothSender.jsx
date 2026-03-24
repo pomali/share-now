@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import './BluetoothSender.css';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Button,
+  Textarea,
+  Alert,
+  Card,
+  Code,
+} from '@chakra-ui/react';
 
 // Custom UUID for our service - randomly generated to avoid conflicts
 const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
@@ -59,7 +71,7 @@ function BluetoothSender() {
       setStatus('Connecting...');
       const server = await device.gatt.connect();
       serverRef.current = server;
-      
+
       setIsConnected(true);
       setStatus(`Connected to ${device.name || 'device'}. Enter text and click Send.`);
     } catch (err) {
@@ -94,7 +106,7 @@ function BluetoothSender() {
 
       // Get the service
       const service = await serverRef.current.getPrimaryService(SERVICE_UUID);
-      
+
       // Get the characteristic
       const characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID);
 
@@ -128,70 +140,82 @@ function BluetoothSender() {
   };
 
   return (
-    <div className="bluetooth-sender-container">
-      <h1>Share Now - Bluetooth Sender</h1>
-      <p>Send text to another device via Bluetooth</p>
+    <Container maxW="2xl" py={10}>
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} textAlign="center">
+          <Heading>Bluetooth Sender</Heading>
+          <Text color="fg.muted">Send text to another device via Bluetooth</Text>
+        </VStack>
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+        {error && (
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Description>{error}</Alert.Description>
+          </Alert.Root>
+        )}
 
-      {status && !error && (
-        <div className="status-message">
-          {status}
-        </div>
-      )}
+        {status && !error && (
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>{status}</Alert.Description>
+          </Alert.Root>
+        )}
 
-      <div className="bluetooth-actions">
-        {!isConnected ? (
-          <button 
-            className="connect-button" 
-            onClick={connectToDevice}
-            disabled={!navigator.bluetooth}
-          >
-            Connect to Device
-          </button>
-        ) : (
-          <>
-            <div className="input-section">
-              <textarea
+        <Box>
+          {!isConnected ? (
+            <Button
+              colorPalette="blue"
+              onClick={connectToDevice}
+              disabled={!navigator.bluetooth}
+            >
+              Connect to Device
+            </Button>
+          ) : (
+            <VStack gap={4} align="stretch">
+              <Textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Enter password, URL, or any text to send..."
-                rows="4"
+                rows={4}
               />
-            </div>
+              <HStack gap={3}>
+                <Button colorPalette="blue" onClick={sendData}>
+                  Send via Bluetooth
+                </Button>
+                <Button colorPalette="red" variant="outline" onClick={disconnect}>
+                  Disconnect
+                </Button>
+              </HStack>
+            </VStack>
+          )}
+        </Box>
 
-            <div className="button-group">
-              <button className="send-button" onClick={sendData}>
-                Send via Bluetooth
-              </button>
-              <button className="disconnect-button" onClick={disconnect}>
-                Disconnect
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-
-      <div className="info-section">
-        <h3>How it works</h3>
-        <ol>
-          <li>Both devices must connect to a Bluetooth device that supports the Share Now service</li>
-          <li>Click "Connect to Device" to search for compatible Bluetooth devices</li>
-          <li>Select a device from the filtered list (only devices with the required service will appear)</li>
-          <li>Enter your text and click "Send via Bluetooth"</li>
-          <li>The text will be transferred to the connected Bluetooth device</li>
-        </ol>
-        <div className="info-note">
-          <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
-          You need a compatible Bluetooth peripheral device (like a phone running a companion app) that 
-          advertises the Share Now Bluetooth service UUID: <code>{SERVICE_UUID}</code>
-        </div>
-      </div>
-    </div>
+        <Card.Root>
+          <Card.Header>
+            <Heading size="md">How it works</Heading>
+          </Card.Header>
+          <Card.Body>
+            <VStack gap={3} align="start">
+              <Box as="ol" pl={5}>
+                <Box as="li" mb={1}>Both devices must connect to a Bluetooth device that supports the Share Now service</Box>
+                <Box as="li" mb={1}>Click &quot;Connect to Device&quot; to search for compatible Bluetooth devices</Box>
+                <Box as="li" mb={1}>Select a device from the filtered list (only devices with the required service will appear)</Box>
+                <Box as="li" mb={1}>Enter your text and click &quot;Send via Bluetooth&quot;</Box>
+                <Box as="li">The text will be transferred to the connected Bluetooth device</Box>
+              </Box>
+              <Alert.Root status="warning">
+                <Alert.Indicator />
+                <Alert.Description>
+                  <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth.
+                  You need a compatible Bluetooth peripheral device (like a phone running a companion app) that
+                  advertises the Share Now Bluetooth service UUID: <Code>{SERVICE_UUID}</Code>
+                </Alert.Description>
+              </Alert.Root>
+            </VStack>
+          </Card.Body>
+        </Card.Root>
+      </VStack>
+    </Container>
   );
 }
 

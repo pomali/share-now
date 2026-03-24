@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import './SoundReceiver.css';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Button,
+  Alert,
+  Card,
+  Spinner,
+} from '@chakra-ui/react';
 
 // Configuration for ultrasonic communication (must match sender)
 const SAMPLE_RATE = 44100;
@@ -15,7 +26,7 @@ function SoundReceiver() {
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
-  
+
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const streamRef = useRef(null);
@@ -42,10 +53,10 @@ function SoundReceiver() {
   const getFrequencyMagnitude = (analyser, frequency) => {
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(dataArray);
-    
+
     const nyquist = SAMPLE_RATE / 2;
     const frequencyBinIndex = Math.round((frequency / nyquist) * analyser.frequencyBinCount);
-    
+
     // Average nearby bins to account for frequency drift
     let sum = 0;
     const range = 2;
@@ -55,23 +66,23 @@ function SoundReceiver() {
         sum += dataArray[index];
       }
     }
-    
+
     return sum / (range * 2 + 1);
   };
 
   const detectBit = (analyser) => {
     const mag0 = getFrequencyMagnitude(analyser, BASE_FREQ);
     const mag1 = getFrequencyMagnitude(analyser, BASE_FREQ + FREQ_SHIFT);
-    
+
     const threshold = 50; // Minimum magnitude to consider as signal
     const diff = Math.abs(mag1 - mag0);
-    
+
     if (mag0 > threshold || mag1 > threshold) {
       if (diff > 20) {
         return mag1 > mag0 ? '1' : '0';
       }
     }
-    
+
     return null;
   };
 
@@ -90,7 +101,7 @@ function SoundReceiver() {
           base64 += String.fromCharCode(parseInt(byte, 2));
         }
       }
-      
+
       // Decode base64 back to text
       const text = decodeURIComponent(escape(atob(base64)));
       return text;
@@ -102,7 +113,7 @@ function SoundReceiver() {
 
   const processReceivedData = () => {
     const bits = receivedBitsRef.current;
-    
+
     if (bits.length < 16) {
       setError('Received data too short. Please try again.');
       return;
@@ -111,7 +122,7 @@ function SoundReceiver() {
     // Extract length header
     const lengthBinary = bits.slice(0, 16);
     const expectedLength = parseInt(lengthBinary, 2);
-    
+
     if (expectedLength <= 0 || expectedLength > 50000) {
       setError('Invalid data length. Please try again.');
       return;
@@ -119,7 +130,7 @@ function SoundReceiver() {
 
     // Extract actual data
     const dataBits = bits.slice(16, 16 + expectedLength);
-    
+
     if (dataBits.length < expectedLength) {
       setError(`Incomplete data received: ${dataBits.length}/${expectedLength} bits. Please try again.`);
       return;
@@ -127,7 +138,7 @@ function SoundReceiver() {
 
     // Decode to text
     const text = binaryToText(dataBits);
-    
+
     if (text) {
       setReceivedText(text);
       setStatus('Data received successfully!');
@@ -140,7 +151,7 @@ function SoundReceiver() {
   const startListening = async () => {
     const analyser = analyserRef.current;
     const currentTime = Date.now();
-    
+
     // Check for preamble
     if (!isReceivingRef.current && detectPreamble(analyser)) {
       isReceivingRef.current = true;
@@ -153,7 +164,7 @@ function SoundReceiver() {
     // Receive data bits
     if (isReceivingRef.current) {
       const timeSinceLastBit = (currentTime - lastBitTimeRef.current) / 1000;
-      
+
       // Check for timeout (no data for 1 second)
       if (timeSinceLastBit > 1.0) {
         setStatus('Processing received data...');
@@ -168,7 +179,7 @@ function SoundReceiver() {
         if (bit !== null) {
           receivedBitsRef.current += bit;
           lastBitTimeRef.current = currentTime;
-          
+
           const bitsReceived = receivedBitsRef.current.length;
           if (bitsReceived % 80 === 0) {
             setStatus(`Receiving data... ${bitsReceived} bits received`);
@@ -187,12 +198,12 @@ function SoundReceiver() {
       isReceivingRef.current = false;
 
       // Request microphone access
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
           noiseSuppression: false,
           autoGainControl: false
-        } 
+        }
       });
       streamRef.current = stream;
 
@@ -262,83 +273,108 @@ function SoundReceiver() {
   };
 
   return (
-    <div className="sound-receiver-container">
-      <h1>Share Now - Sound Receiver</h1>
-      <p>Receive text using ultrasonic sound waves</p>
+    <Container maxW="2xl" py={10}>
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} textAlign="center">
+          <Heading>Sound Receiver</Heading>
+          <Text color="fg.muted">Receive text using ultrasonic sound waves</Text>
+        </VStack>
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-
-      {status && !error && (
-        <div className="status-message">
-          {status}
-        </div>
-      )}
-
-      <div className="sound-actions">
-        {!isListening && !receivedText && (
-          <button className="start-button" onClick={startReceiving}>
-            Start Receiving
-          </button>
+        {error && (
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Description>{error}</Alert.Description>
+          </Alert.Root>
         )}
 
-        {isListening && !receivedText && (
-          <div className="listening-section">
-            <div className="spinner"></div>
-            <p>Listening for ultrasonic signals...</p>
-            <p className="hint">Ask the sender to transmit now</p>
-            <button className="stop-button" onClick={stopReceiving}>
-              Stop
-            </button>
-          </div>
+        {status && !error && (
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>{status}</Alert.Description>
+          </Alert.Root>
         )}
 
-        {receivedText && (
-          <div className="result-section">
-            <h2>Received Content:</h2>
-            <div className="received-text">
-              {receivedText}
-            </div>
-            <div className="button-group">
-              <button className="copy-button" onClick={copyToClipboard}>
-                {copied ? 'Copied!' : 'Copy to Clipboard'}
-              </button>
-              <button className="receive-again-button" onClick={() => {
-                setReceivedText('');
-                setStatus('');
-                startReceiving();
-              }}>
-                Receive Again
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        <Box>
+          {!isListening && !receivedText && (
+            <Button colorPalette="blue" onClick={startReceiving}>
+              Start Receiving
+            </Button>
+          )}
 
-      <div className="info-section">
-        <h3>How it works</h3>
-        <ol>
-          <li>Click "Start Receiving" to activate the microphone</li>
-          <li>Grant microphone permission when prompted</li>
-          <li>Keep your device close to the sender (within 1-2 meters)</li>
-          <li>Wait for the sender to start transmitting</li>
-          <li>The ultrasonic sound will be captured and decoded automatically</li>
-        </ol>
-        <div className="info-note">
-          <strong>Note:</strong> This uses ultrasonic frequencies (18-20 kHz) to receive data. 
-          Ensure your device's microphone is enabled and not muted. The receiver must be started 
-          before the sender begins transmission. Keep devices close and minimize background noise.
-        </div>
-        <div className="warning-note">
-          ⚠️ For best results, use in a quiet environment. Loud noises or other ultrasonic 
-          sources may interfere with reception. If reception fails, try moving devices closer 
-          together and ensure there are no obstacles between them.
-        </div>
-      </div>
-    </div>
+          {isListening && !receivedText && (
+            <VStack gap={3} align="center">
+              <Spinner size="lg" color="blue.500" />
+              <Text>Listening for ultrasonic signals...</Text>
+              <Text fontSize="sm" color="fg.muted">Ask the sender to transmit now</Text>
+              <Button colorPalette="red" variant="outline" onClick={stopReceiving}>
+                Stop
+              </Button>
+            </VStack>
+          )}
+
+          {receivedText && (
+            <VStack gap={4} align="stretch">
+              <Heading size="md">Received Content:</Heading>
+              <Box
+                p={4}
+                borderRadius="md"
+                borderWidth="1px"
+                fontFamily="mono"
+                whiteSpace="pre-wrap"
+                wordBreak="break-all"
+              >
+                {receivedText}
+              </Box>
+              <HStack gap={3}>
+                <Button colorPalette="blue" onClick={copyToClipboard}>
+                  {copied ? 'Copied!' : 'Copy to Clipboard'}
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  setReceivedText('');
+                  setStatus('');
+                  startReceiving();
+                }}>
+                  Receive Again
+                </Button>
+              </HStack>
+            </VStack>
+          )}
+        </Box>
+
+        <Card.Root>
+          <Card.Header>
+            <Heading size="md">How it works</Heading>
+          </Card.Header>
+          <Card.Body>
+            <VStack gap={3} align="start">
+              <Box as="ol" pl={5}>
+                <Box as="li" mb={1}>Click &quot;Start Receiving&quot; to activate the microphone</Box>
+                <Box as="li" mb={1}>Grant microphone permission when prompted</Box>
+                <Box as="li" mb={1}>Keep your device close to the sender (within 1-2 meters)</Box>
+                <Box as="li" mb={1}>Wait for the sender to start transmitting</Box>
+                <Box as="li">The ultrasonic sound will be captured and decoded automatically</Box>
+              </Box>
+              <Alert.Root status="info">
+                <Alert.Indicator />
+                <Alert.Description>
+                  <strong>Note:</strong> This uses ultrasonic frequencies (18-20 kHz) to receive data.
+                  Ensure your device&apos;s microphone is enabled and not muted. The receiver must be started
+                  before the sender begins transmission. Keep devices close and minimize background noise.
+                </Alert.Description>
+              </Alert.Root>
+              <Alert.Root status="warning">
+                <Alert.Indicator />
+                <Alert.Description>
+                  ⚠️ For best results, use in a quiet environment. Loud noises or other ultrasonic
+                  sources may interfere with reception. If reception fails, try moving devices closer
+                  together and ensure there are no obstacles between them.
+                </Alert.Description>
+              </Alert.Root>
+            </VStack>
+          </Card.Body>
+        </Card.Root>
+      </VStack>
+    </Container>
   );
 }
 
