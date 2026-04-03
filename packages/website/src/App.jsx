@@ -16,16 +16,12 @@ import {
 import { ColorModeButton } from './components/ui/color-mode';
 import Sender from './components/Sender';
 import Receiver from './components/Receiver';
-import BluetoothSender from './components/BluetoothSender';
-import BluetoothReceiver from './components/BluetoothReceiver';
 import SoundSender from './components/SoundSender';
 import SoundReceiver from './components/SoundReceiver';
 
 const modeCards = [
   { to: '/sender', icon: '📤', title: 'Sender', desc: 'Create a QR code to share' },
   { to: '/receiver', icon: '📥', title: 'Receiver', desc: 'Scan a QR code to receive' },
-  { to: '/bluetooth-sender', icon: '📡', title: 'Bluetooth Sender', desc: 'Send via Bluetooth' },
-  { to: '/bluetooth-receiver', icon: '📲', title: 'Bluetooth Receiver', desc: 'Receive via Bluetooth' },
   { to: '/sound-sender', icon: '🔊', title: 'Sound Sender', desc: 'Send via ultrasonic sound' },
   { to: '/sound-receiver', icon: '🎤', title: 'Sound Receiver', desc: 'Receive via ultrasonic sound' },
 ];
@@ -33,8 +29,6 @@ const modeCards = [
 const navLinks = [
   { to: '/sender', label: 'QR Sender' },
   { to: '/receiver', label: 'QR Receiver' },
-  { to: '/bluetooth-sender', label: 'BT Sender' },
-  { to: '/bluetooth-receiver', label: 'BT Receiver' },
   { to: '/sound-sender', label: 'Sound Sender' },
   { to: '/sound-receiver', label: 'Sound Receiver' },
 ];
@@ -118,9 +112,6 @@ function Home() {
                 <strong>QR Code:</strong> The sender enters text and generates a QR code. The receiver scans it with their camera.
               </Box>
               <Box as="li" mb={2}>
-                <strong>Bluetooth:</strong> Connect two devices via Bluetooth, confirm the device name, and send text directly.
-              </Box>
-              <Box as="li" mb={2}>
                 <strong>Sound:</strong> Send data using ultrasonic sound waves (18-20 kHz). Keep devices close together for transmission.
               </Box>
               <Box as="li">Data is shared locally - no server involved!</Box>
@@ -157,8 +148,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sender" element={<Sender />} />
         <Route path="/receiver" element={<Receiver />} />
-        <Route path="/bluetooth-sender" element={<BluetoothSender />} />
-        <Route path="/bluetooth-receiver" element={<BluetoothReceiver />} />
         <Route path="/sound-sender" element={<SoundSender />} />
         <Route path="/sound-receiver" element={<SoundReceiver />} />
       </Routes>
