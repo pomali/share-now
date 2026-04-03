@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import './BluetoothReceiver.css';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Button,
+  Alert,
+  Card,
+  Code,
+  Spinner,
+} from '@chakra-ui/react';
 
 // Custom UUID for our service - randomly generated to avoid conflicts (must match sender)
 const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
@@ -65,7 +77,7 @@ function BluetoothReceiver() {
       // Connect to GATT server
       const server = await device.gatt.connect();
       serverRef.current = server;
-      
+
       setIsAdvertising(true);
       setStatus(`Connected to ${device.name || 'device'}. Waiting for data...`);
 
@@ -133,82 +145,104 @@ function BluetoothReceiver() {
   };
 
   return (
-    <div className="bluetooth-receiver-container">
-      <h1>Share Now - Bluetooth Receiver</h1>
-      <p>Receive text from another device via Bluetooth</p>
+    <Container maxW="2xl" py={10}>
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} textAlign="center">
+          <Heading>Bluetooth Receiver</Heading>
+          <Text color="fg.muted">Receive text from another device via Bluetooth</Text>
+        </VStack>
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-
-      {status && !error && (
-        <div className="status-message">
-          {status}
-        </div>
-      )}
-
-      <div className="bluetooth-actions">
-        {!isAdvertising && !receivedText && (
-          <button 
-            className="start-button" 
-            onClick={startReceiving}
-            disabled={!navigator.bluetooth}
-          >
-            Start Receiving
-          </button>
+        {error && (
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Description>{error}</Alert.Description>
+          </Alert.Root>
         )}
 
-        {isAdvertising && !receivedText && (
-          <div className="waiting-section">
-            <div className="spinner"></div>
-            <p>Ready to receive. Waiting for sender...</p>
-            <button className="stop-button" onClick={stopReceiving}>
-              Stop
-            </button>
-          </div>
+        {status && !error && (
+          <Alert.Root status="info">
+            <Alert.Indicator />
+            <Alert.Description>{status}</Alert.Description>
+          </Alert.Root>
         )}
 
-        {receivedText && (
-          <div className="result-section">
-            <h2>Received Content:</h2>
-            <div className="received-text">
-              {receivedText}
-            </div>
-            <div className="button-group">
-              <button className="copy-button" onClick={copyToClipboard}>
-                {copied ? 'Copied!' : 'Copy to Clipboard'}
-              </button>
-              <button className="receive-again-button" onClick={() => {
-                setReceivedText('');
-                startReceiving();
-              }}>
-                Receive Again
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        <Box>
+          {!isAdvertising && !receivedText && (
+            <Button
+              colorPalette="blue"
+              onClick={startReceiving}
+              disabled={!navigator.bluetooth}
+            >
+              Start Receiving
+            </Button>
+          )}
 
-      <div className="info-section">
-        <h3>How it works</h3>
-        <ol>
-          <li>Both sender and receiver connect to the same Bluetooth peripheral device</li>
-          <li>Click "Start Receiving" to search for compatible Bluetooth devices</li>
-          <li>Select the same device that the sender will connect to (only devices with the required service will appear)</li>
-          <li>Wait for the sender to transmit data</li>
-          <li>The text will be received automatically and displayed</li>
-        </ol>
-        <div className="info-note">
-          <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth. 
-          Both sender and receiver must connect to the same Bluetooth peripheral device (like a phone running 
-          a companion app) that advertises the Share Now service UUID: <code>{SERVICE_UUID}</code>
-          <br /><br />
-          For direct browser-to-browser sharing, use the QR Code mode instead.
-        </div>
-      </div>
-    </div>
+          {isAdvertising && !receivedText && (
+            <VStack gap={3} align="center">
+              <Spinner size="lg" color="blue.500" />
+              <Text>Ready to receive. Waiting for sender...</Text>
+              <Button colorPalette="red" variant="outline" onClick={stopReceiving}>
+                Stop
+              </Button>
+            </VStack>
+          )}
+
+          {receivedText && (
+            <VStack gap={4} align="stretch">
+              <Heading size="md">Received Content:</Heading>
+              <Box
+                p={4}
+                borderRadius="md"
+                borderWidth="1px"
+                fontFamily="mono"
+                whiteSpace="pre-wrap"
+                wordBreak="break-all"
+              >
+                {receivedText}
+              </Box>
+              <HStack gap={3}>
+                <Button colorPalette="blue" onClick={copyToClipboard}>
+                  {copied ? 'Copied!' : 'Copy to Clipboard'}
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  setReceivedText('');
+                  startReceiving();
+                }}>
+                  Receive Again
+                </Button>
+              </HStack>
+            </VStack>
+          )}
+        </Box>
+
+        <Card.Root>
+          <Card.Header>
+            <Heading size="md">How it works</Heading>
+          </Card.Header>
+          <Card.Body>
+            <VStack gap={3} align="start">
+              <Box as="ol" pl={5}>
+                <Box as="li" mb={1}>Both sender and receiver connect to the same Bluetooth peripheral device</Box>
+                <Box as="li" mb={1}>Click &quot;Start Receiving&quot; to search for compatible Bluetooth devices</Box>
+                <Box as="li" mb={1}>Select the same device that the sender will connect to (only devices with the required service will appear)</Box>
+                <Box as="li" mb={1}>Wait for the sender to transmit data</Box>
+                <Box as="li">The text will be received automatically and displayed</Box>
+              </Box>
+              <Alert.Root status="warning">
+                <Alert.Indicator />
+                <Alert.Description>
+                  <strong>Note:</strong> Web browsers cannot directly communicate with each other via Bluetooth.
+                  Both sender and receiver must connect to the same Bluetooth peripheral device (like a phone running
+                  a companion app) that advertises the Share Now service UUID: <Code>{SERVICE_UUID}</Code>
+                  <br /><br />
+                  For direct browser-to-browser sharing, use the QR Code mode instead.
+                </Alert.Description>
+              </Alert.Root>
+            </VStack>
+          </Card.Body>
+        </Card.Root>
+      </VStack>
+    </Container>
   );
 }
 

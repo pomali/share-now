@@ -1,6 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { Html5Qrcode } from 'html5-qrcode';
-import './Receiver.css';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Button,
+  Alert,
+} from '@chakra-ui/react';
 
 function Receiver() {
   const [scannedText, setScannedText] = useState('');
@@ -10,6 +20,7 @@ function Receiver() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [autoStartAttempted, setAutoStartAttempted] = useState(false);
   const [isFrontCamera, setIsFrontCamera] = useState(false);
+  const [isQrReaderVisible, setIsQrReaderVisible] = useState(false);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
   const resultRef = useRef(null);
@@ -26,12 +37,12 @@ function Receiver() {
       setScannedText('');
       setShowScrollButton(false);
       setIsFrontCamera(false);
-      
+
       // Make the reader element visible before the library initializes,
       // so it can measure dimensions for the camera feed.
-      if (scannerRef.current) {
-        scannerRef.current.classList.remove('qr-reader-hidden');
-      }
+      flushSync(() => {
+        setIsQrReaderVisible(true);
+      });
 
       // Wait for next frame to ensure the browser applies the layout change
       await new Promise(resolve => requestAnimationFrame(resolve));
@@ -39,7 +50,7 @@ function Receiver() {
       // Always create a fresh instance to avoid stale state after cleanup
       html5QrCodeRef.current = new Html5Qrcode("qr-reader");
 
-      const config = { 
+      const config = {
         fps: 10,
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0
@@ -80,9 +91,7 @@ function Receiver() {
       setError(`Unable to start camera: ${err.message || err}`);
       isScanningRef.current = false;
       setIsScanning(false);
-      if (scannerRef.current) {
-        scannerRef.current.classList.add('qr-reader-hidden');
-      }
+      setIsQrReaderVisible(false);
     } finally {
       isTransitioningRef.current = false;
     }
@@ -97,6 +106,7 @@ function Receiver() {
         console.error('Error stopping scanner:', err);
       } finally {
         setIsScanning(false);
+        setIsQrReaderVisible(false);
       }
     }
   };
@@ -137,63 +147,86 @@ function Receiver() {
   }, []);
 
   return (
-    <div className="receiver-container">
-      <h1>Receiver</h1>
-      <p>Scan a QR code to receive the shared content</p>
+    <Container maxW="2xl" py={10}>
+      <VStack gap={6} align="stretch">
+        <VStack gap={2} textAlign="center">
+          <Heading>Receiver</Heading>
+          <Text color="fg.muted">Scan a QR code to receive the shared content</Text>
+        </VStack>
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+        {error && (
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Description>{error}</Alert.Description>
+          </Alert.Root>
+        )}
 
-      <div className="receiver-content">
-        <div className="scanner-section">
+        <VStack gap={4} align="center">
           {!isScanning && !scannedText && autoStartAttempted && (
-            <button className="scan-button" onClick={startScanning}>
+            <Button colorPalette="blue" onClick={startScanning}>
               Start Camera
-            </button>
+            </Button>
           )}
 
-          <div id="qr-reader" ref={scannerRef} className={[isScanning ? '' : 'qr-reader-hidden', isFrontCamera ? 'camera-mirrored' : ''].filter(Boolean).join(' ')}></div>
-          
+          <Box
+            id="qr-reader"
+            ref={scannerRef}
+            w="full"
+            display={isQrReaderVisible ? 'block' : 'none'}
+            transform={isFrontCamera ? 'scaleX(-1)' : undefined}
+          />
+
           {isScanning && (
-            <button className="stop-button" onClick={stopScanning}>
+            <Button colorPalette="red" variant="outline" onClick={stopScanning}>
               Stop Scanning
-            </button>
+            </Button>
           )}
-        </div>
+        </VStack>
 
         {scannedText && (
-          <div className="result-section" ref={resultRef}>
-            <h2>Scanned Content:</h2>
-            <div className="scanned-text">
+          <VStack gap={4} align="stretch" ref={resultRef}>
+            <Heading size="md">Scanned Content:</Heading>
+            <Box
+              p={4}
+              borderRadius="md"
+              borderWidth="1px"
+              fontFamily="mono"
+              whiteSpace="pre-wrap"
+              wordBreak="break-all"
+            >
               {scannedText}
-            </div>
-            <button className="copy-button" onClick={copyToClipboard}>
-              {copied ? 'Copied!' : 'Copy to Clipboard'}
-            </button>
-            <button className="scan-again-button" onClick={() => {
-              setScannedText('');
-              setShowScrollButton(false);
-              startScanning();
-            }}>
-              Scan Again
-            </button>
-          </div>
+            </Box>
+            <HStack gap={3}>
+              <Button colorPalette="blue" onClick={copyToClipboard}>
+                {copied ? 'Copied!' : 'Copy to Clipboard'}
+              </Button>
+              <Button variant="outline" onClick={() => {
+                setScannedText('');
+                setShowScrollButton(false);
+                startScanning();
+              }}>
+                Scan Again
+              </Button>
+            </HStack>
+          </VStack>
         )}
-      </div>
+      </VStack>
 
       {showScrollButton && (
-        <button 
-          className="scroll-to-result-button" 
+        <Button
+          position="fixed"
+          bottom={6}
+          right={6}
+          borderRadius="full"
+          colorPalette="blue"
           onClick={scrollToResult}
           aria-label="Scroll to result"
+          size="lg"
         >
           ↓
-        </button>
+        </Button>
       )}
-    </div>
+    </Container>
   );
 }
 
