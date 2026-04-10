@@ -21,9 +21,15 @@ function SoundReceiver() {
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const receiverRef = useRef(null);
 
   useEffect(() => {
+    Quiet.addReadyCallback(
+      () => setIsReady(true),
+      () => setError('Failed to initialize sound library'),
+    );
+
     return () => {
       if (receiverRef.current) {
         receiverRef.current.destroy();
@@ -34,6 +40,11 @@ function SoundReceiver() {
   }, []);
 
   const startReceiving = () => {
+    if (!isReady) {
+      setError('Sound library is still initializing. Please try again in a moment.');
+      return;
+    }
+
     setError('');
     setReceivedText('');
     setStatus('Requesting microphone access...');
@@ -113,7 +124,7 @@ function SoundReceiver() {
 
         <Box>
           {!isListening && !receivedText && (
-            <Button colorPalette="blue" onClick={startReceiving}>
+            <Button colorPalette="blue" onClick={startReceiving} disabled={!isReady}>
               Start Receiving
             </Button>
           )}

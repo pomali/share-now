@@ -5,4 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/',
+  define: {
+    // quietjs-bundle assigns to this undeclared identifier; rewrite to a real global property.
+    memoryInitializerPrefixURL: 'globalThis.__quietMemoryInitializerPrefixURL',
+  },
 })

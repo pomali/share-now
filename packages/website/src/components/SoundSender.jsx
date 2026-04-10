@@ -3,6 +3,7 @@ import {
   Box,
   Container,
   VStack,
+  HStack,
   Heading,
   Text,
   Button,
@@ -48,7 +49,6 @@ function SoundSender() {
           transmitterRef.current = null;
           setStatus('Data sent successfully! The receiver should now have your message.');
           setIsSending(false);
-          setText('');
         },
       });
       transmitterRef.current = tx;
@@ -67,6 +67,11 @@ function SoundSender() {
     }
     setIsSending(false);
     setStatus('Transmission cancelled');
+  };
+
+  const clearText = () => {
+    setText('');
+    setError('');
   };
 
   return (
@@ -100,9 +105,14 @@ function SoundSender() {
                 placeholder="Enter password, URL, or any text to send..."
                 rows={4}
               />
-              <Button colorPalette="blue" onClick={sendViaSound} disabled={!isReady}>
-                Send via Sound
-              </Button>
+              <HStack gap={3}>
+                <Button colorPalette="blue" onClick={sendViaSound} disabled={!isReady}>
+                  Send via Sound
+                </Button>
+                <Button variant="outline" onClick={clearText} disabled={!text}>
+                  Clear
+                </Button>
+              </HStack>
             </VStack>
           ) : (
             <VStack gap={3} align="center">
