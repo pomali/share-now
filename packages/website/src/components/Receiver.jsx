@@ -27,6 +27,44 @@ function Receiver() {
   const isScanningRef = useRef(false);
   const isTransitioningRef = useRef(false);
 
+  const getPreferredCamera = async () => {
+    try {
+      const cameras = await Html5Qrcode.getCameras();
+      if (!cameras?.length) return null;
+
+      const rearCamera = cameras.find((camera) =>
+        /(back|rear|environment|world)/i.test(camera.label || '')
+      );
+      if (rearCamera) {
+        return { id: rearCamera.id, isFront: false };
+      }
+
+      const frontCamera = cameras.find((camera) =>
+        /(front|user|facetime|selfie)/i.test(camera.label || '')
+      );
+      if (frontCamera) {
+        return { id: frontCamera.id, isFront: true };
+      }
+
+      return { id: cameras[0].id, isFront: false };
+    } catch {
+      return null;
+    }
+  };
+
+  const syncFrontCameraFromTrackSettings = () => {
+    const settings = html5QrCodeRef.current?.getRunningTrackSettings?.();
+    const facingMode = settings?.facingMode;
+
+    if (typeof facingMode !== 'string') return;
+
+    if (facingMode.toLowerCase() === 'user') {
+      setIsFrontCamera(true);
+    } else if (facingMode.toLowerCase() === 'environment') {
+      setIsFrontCamera(false);
+    }
+  };
+
   const startScanning = async () => {
     // Prevent concurrent start attempts (e.g. React Strict Mode double-mount)
     if (isScanningRef.current || isTransitioningRef.current) return;
@@ -68,22 +106,36 @@ function Receiver() {
         // Ignore scan errors (no QR code in frame)
       };
 
-      try {
+      const preferredCamera = await getPreferredCamera();
+
+      if (preferredCamera) {
         await html5QrCodeRef.current.start(
-          { facingMode: "environment" },
+          preferredCamera.id,
           config,
           successCallback,
           errorCallback
         );
-      } catch {
-        await html5QrCodeRef.current.start(
-          { facingMode: "user" },
-          config,
-          successCallback,
-          errorCallback
-        );
-        setIsFrontCamera(true);
+        setIsFrontCamera(preferredCamera.isFront);
+      } else {
+        try {
+          await html5QrCodeRef.current.start(
+            { facingMode: "environment" },
+            config,
+            successCallback,
+            errorCallback
+          );
+        } catch {
+          await html5QrCodeRef.current.start(
+            { facingMode: "user" },
+            config,
+            successCallback,
+            errorCallback
+          );
+          setIsFrontCamera(true);
+        }
       }
+
+      syncFrontCameraFromTrackSettings();
 
       isScanningRef.current = true;
       setIsScanning(true);
@@ -144,6 +196,7 @@ function Receiver() {
         html5QrCodeRef.current.stop().catch(console.error);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -172,8 +225,18 @@ function Receiver() {
             id="qr-reader"
             ref={scannerRef}
             w="full"
-            display={isQrReaderVisible ? 'block' : 'none'}
-            transform={isFrontCamera ? 'scaleX(-1)' : undefined}
+            className={[
+              isQrReaderVisible ? '' : 'qr-reader-hidden',
+              isFrontCamera ? 'camera-mirrored' : '',
+            ].filter(Boolean).join(' ')}
+            css={{
+              '&.qr-reader-hidden': {
+                display: 'none',
+              },
+              '&.camera-mirrored video': {
+                transform: 'scaleX(-1)',
+              },
+            }}
           />
 
           {isScanning && (
